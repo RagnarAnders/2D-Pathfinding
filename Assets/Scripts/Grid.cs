@@ -8,11 +8,10 @@ public class Grid : MonoBehaviour
     [SerializeField] private Vector2 gridWorldSize;
     [SerializeField] private float nodeRadius;
     [SerializeField] private LayerMask unwalkableMask;
-
-    private List<Node> path;
+    [SerializeField] private bool displayGridGizmos;
     private int gridSizeX, gridSizeY;
     private float nodeDiameter;
-    private void Start()
+    private void Awake()
     {
         nodeDiameter = nodeRadius * 2;
         gridSizeX = Mathf.RoundToInt(gridWorldSize.x / nodeDiameter);
@@ -20,6 +19,13 @@ public class Grid : MonoBehaviour
         CreateGrid();
     }
 
+    public int MaxSize
+    {
+        get
+        {
+            return gridSizeX * gridSizeY;
+        }
+    }
     private void CreateGrid()
     {
         grid = new Node[gridSizeX, gridSizeY];
@@ -38,22 +44,16 @@ public class Grid : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.DrawWireCube(transform.position, new Vector3(gridWorldSize.x, 1f, gridWorldSize.y));
-
-        if(grid != null)
-        {
-            foreach(Node n in grid)
+       
+            if (grid != null && displayGridGizmos)
             {
-                Gizmos.color = n.IsWalkable() ? Color.white : Color.red;
-                if(path!= null)
+                foreach (Node n in grid)
                 {
-                    if (path.Contains(n))
-                    {
-                        Gizmos.color = Color.black;
-                    }
+                    Gizmos.color = n.IsWalkable() ? Color.white : Color.red;
+                    Gizmos.DrawCube(n.GetWorldPosition(), Vector3.one * (nodeDiameter - 0.1f));
                 }
-                Gizmos.DrawCube(n.GetWorldPosition(), Vector3.one * (nodeDiameter -0.1f));
             }
-        }
+        
     }
 
     public Node NodeFromWorldPosition(Vector3 worldPosition)
@@ -66,7 +66,7 @@ public class Grid : MonoBehaviour
         int x = Mathf.RoundToInt((gridSizeX - 1) * precentX);
         int y = Mathf.RoundToInt((gridSizeY - 1) * precentY);
 
-        return grid[x, y]; 
+        return grid[x, y];
     }
 
     public List<Node> GetNeighbours(Node node)
@@ -94,8 +94,4 @@ public class Grid : MonoBehaviour
         return neighbours;
     }
 
-    public void SetPath(List<Node> nodes)
-    {
-        path = nodes;
-    }
 }
