@@ -11,6 +11,7 @@ public class Node
 
     private int gCost;
     private int hCost;
+    private Node parent;
 
     public Node(bool walkable, Vector3 worldPosition, int gridX, int gridY)
     {
@@ -29,20 +30,40 @@ public class Node
         return walkable;
     }
 
-    public int fCost()
+    public int FCost()
     {
         return gCost + hCost;
     }
-    public int getHCost()
+    public int GetHCost()
     {
         return hCost;
     }
-    public int getGridX()
+    public int GetGridX()
     {
         return gridX;
     }
-    public int getGridY()
+    public int GetGridY()
     {
         return gridY;
+    }
+    public int GetGCost()
+    {
+        return gCost;
+    }
+    public void SetGCost(int cost)
+    {
+        gCost = cost;
+    }
+    public void SetHCost(int cost)
+    {
+        hCost = cost;
+    }
+    public Node GetParent()
+    {
+        return parent;
+    }
+    public void SetParent(Node value)
+    {
+        parent = value; 
     }
 }

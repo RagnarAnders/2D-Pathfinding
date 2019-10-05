@@ -9,6 +9,7 @@ public class Grid : MonoBehaviour
     [SerializeField] private float nodeRadius;
     [SerializeField] private LayerMask unwalkableMask;
 
+    private List<Node> path;
     private int gridSizeX, gridSizeY;
     private float nodeDiameter;
     private void Start()
@@ -43,6 +44,13 @@ public class Grid : MonoBehaviour
             foreach(Node n in grid)
             {
                 Gizmos.color = n.IsWalkable() ? Color.white : Color.red;
+                if(path!= null)
+                {
+                    if (path.Contains(n))
+                    {
+                        Gizmos.color = Color.black;
+                    }
+                }
                 Gizmos.DrawCube(n.GetWorldPosition(), Vector3.one * (nodeDiameter -0.1f));
             }
         }
@@ -73,8 +81,8 @@ public class Grid : MonoBehaviour
                 {
                     continue;
                 }
-                int checkX = node.getGridX() + x;
-                int checkY = node.getGridY() + y;
+                int checkX = node.GetGridX() + x;
+                int checkY = node.GetGridY() + y;
 
                 if (checkX >= 0 && checkX < gridSizeX && checkY >= 0 && checkY < gridSizeY)
                 {
@@ -84,5 +92,10 @@ public class Grid : MonoBehaviour
         }
 
         return neighbours;
+    }
+
+    public void SetPath(List<Node> nodes)
+    {
+        path = nodes;
     }
 }
